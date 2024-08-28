@@ -57,6 +57,7 @@ function initializeMap(geojsonData) {
       data: geojsonData,
     });
 
+    // Existing district layers...
     map.addLayer({
       id: "districts-fill",
       type: "fill",
@@ -89,11 +90,35 @@ function initializeMap(geojsonData) {
         "text-font": ["Open Sans Regular", "Arial Unicode MS Regular"],
         "text-size": 14,
         "text-offset": [0, 0.6],
-        "text-anchor": "top"
+        "text-anchor": "top",
       },
       paint: {
-        "text-color": "#000000"
-      }
+        "text-color": "#000000",
+      },
     });
+
+    map.addLayer({
+      id: "precinct-highlight",
+      type: "line",
+      source: "districts",
+      layout: {},
+      paint: {
+        "line-color": "#ff0000", // Highlight color, red
+        "line-width": 3,
+      },
+      filter: ["all", ["==", "Precinct", ""], ["==", "Split", ""]], // No precinct highlighted initially
+    });
+    
   });
+
+  // Change the cursor to a pointer when over the districts
+map.on("mouseenter", "districts-fill", function () {
+  map.getCanvas().style.cursor = "pointer";
+});
+map.on("mouseleave", "districts-fill", function () {
+  map.getCanvas().style.cursor = "";
+});
+
+
+
 }
